@@ -1,0 +1,348 @@
+<template>
+	<div class="game-container">
+		<h1>Softwordle</h1>
+		<Board ref="boardRef" :board-state="boardState" />
+		<Keyboard
+			ref="keyboardRef"
+			:keyboard-state="keyboardState"
+			@press-key="updateBoard"
+		/>
+	</div>
+	<v-dialog> aasd </v-dialog>
+</template>
+
+<script setup>
+	import Board from '../components/Board.vue';
+	import Keyboard from '../components/Keyboard.vue';
+	import WordList from '../assets/words.json';
+	import { ref, watch } from 'vue';
+
+	// Define the board and keyboard state
+	const keyboardState = ref({
+		q: 'unused',
+		w: 'unused',
+		e: 'unused',
+		r: 'unused',
+		t: 'unused',
+		y: 'unused',
+		u: 'unused',
+		i: 'unused',
+		o: 'unused',
+		p: 'unused',
+		a: 'unused',
+		s: 'unused',
+		d: 'unused',
+		f: 'unused',
+		g: 'unused',
+		h: 'unused',
+		j: 'unused',
+		k: 'unused',
+		l: 'unused',
+		z: 'unused',
+		x: 'unused',
+		c: 'unused',
+		v: 'unused',
+		b: 'unused',
+		n: 'unused',
+		m: 'unused',
+		erase: 'unused',
+		enter: 'unused',
+	});
+	const boardState = ref([
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+		{
+			0: {
+				letter: ' ',
+				status: 'unused',
+			},
+			1: {
+				letter: ' ',
+				status: 'unused',
+			},
+			2: {
+				letter: ' ',
+				status: 'unused',
+			},
+			3: {
+				letter: ' ',
+				status: 'unused',
+			},
+			4: {
+				letter: ' ',
+				status: 'unused',
+			},
+		},
+	]);
+	const currentBoardRow = ref(0);
+	const currentBoardColumn = ref(0);
+	const gameState = ref('playing');
+	const displayError = ref(false);
+	const errorType = ref('none');
+
+	const randomWord =
+		WordList['words'][Math.floor(Math.random() * WordList['words'].length)];
+	console.log(randomWord);
+
+	// Update the board
+	const updateBoard = (key) => {
+		if (key === 'erase') {
+			if (currentBoardColumn.value > 0) {
+				currentBoardColumn.value--;
+				boardState.value[currentBoardRow.value][
+					currentBoardColumn.value
+				].letter = ' ';
+				boardState.value[currentBoardRow.value][
+					currentBoardColumn.value
+				].status = 'unused';
+			} /* else {
+				displayError.value = true;
+				errorType.value = 'erase';
+				setTimeout(() => {
+					displayError.value = false;
+					errorType.value = 'none';
+				}, 2000);
+			}*/
+		} else if (key === 'enter') {
+			if (currentBoardRow.value <= 5 && currentBoardColumn.value === 5) {
+				checkWord(boardState.value[currentBoardRow.value]);
+				currentBoardRow.value++;
+				currentBoardColumn.value = 0;
+			}
+			/*
+			if (currentBoardColumn.value < 5) {
+				displayError.value = true;
+				errorType.value = 'enter';
+				setTimeout(() => {
+					displayError.value = false;
+					errorType.value = 'none';
+				}, 2000);
+			}
+			*/
+		} else {
+			if (currentBoardColumn.value < 5) {
+				boardState.value[currentBoardRow.value][
+					currentBoardColumn.value
+				].letter = key;
+				currentBoardColumn.value++;
+			}
+		}
+	};
+
+	// Check if the letter is almost correct
+	const checkAlmost = (index, correctWord, guessWord) => {
+		// Create an object to count appearances of each letter in the correctWord
+		const correctCount = {};
+		for (let letter of correctWord) {
+			correctCount[letter] = (correctCount[letter] || 0) + 1;
+		}
+
+		// Track the actual use of each letter in the guess for 'correct' and 'almost' statuses
+		const actualUseCount = {};
+		for (let i = 0; i < guessWord.length; i++) {
+			if (correctWord[i] === guessWord[i]) {
+				// Increase count for correctly placed letters
+				actualUseCount[guessWord[i]] = (actualUseCount[guessWord[i]] || 0) + 1;
+			}
+		}
+
+		// Calculate the potential uses for 'almost' considering only letters before the current index
+		for (let i = 0; i < index; i++) {
+			if (
+				correctWord.includes(guessWord[i]) &&
+				correctWord[i] !== guessWord[i]
+			) {
+				if ((actualUseCount[guessWord[i]] || 0) < correctCount[guessWord[i]]) {
+					actualUseCount[guessWord[i]] =
+						(actualUseCount[guessWord[i]] || 0) + 1;
+				}
+			}
+		}
+
+		// Now check for the 'almost' status of the current letter at the current index
+		const currentLetter = guessWord[index];
+		if (
+			correctWord.includes(currentLetter) &&
+			correctWord[index] !== currentLetter
+		) {
+			if ((actualUseCount[currentLetter] || 0) < correctCount[currentLetter]) {
+				// If we haven't used up all instances of this letter, it's almost correct
+				return true;
+			}
+		}
+
+		return false;
+	};
+
+	// Check the word
+	const boardRef = ref(null);
+	const keyboardRef = ref(null);
+	const checkWord = (row) => {
+		boardRef.value.changeClass(currentBoardRow.value);
+		let word = '';
+		for (let i = 0; i < 5; i++) {
+			word += row[i].letter;
+		}
+		keyboardRef.value.changeClass(row);
+		// Change board state
+		for (let i = 0; i < 5; i++) {
+			if (word[i] === randomWord[i]) {
+				row[i].status = 'correct';
+			} else if (checkAlmost(i, randomWord, word)) {
+				row[i].status = 'almost';
+			} else {
+				row[i].status = 'incorrect';
+			}
+		}
+
+		// Change keyboard state
+		for (let i = 0; i < 5; i++) {
+			if (row[i].status === 'correct' || row[i].status === 'almost') {
+				keyboardState.value[row[i].letter] = 'correct';
+			} else {
+				keyboardState.value[row[i].letter] = 'used';
+			}
+		}
+
+		// Check if the player has won
+		let won = true;
+		for (let i = 0; i < 5; i++) {
+			if (row[i].status !== 'correct') {
+				won = false;
+				break;
+			}
+		}
+		if (won) {
+			gameState.value = 'won';
+		} else if (currentBoardRow.value === 5) {
+			gameState.value = 'over';
+		}
+	};
+
+	// If the game is won console log it
+	watch(gameState, (newGameState) => {
+		if (newGameState === 'won') {
+			boardRef.value.dance(currentBoardRow.value - 1);
+			keyboardRef.value.blockKeyboard();
+			console.log('You won!');
+		}
+		if (newGameState === 'over') {
+			keyboardRef.value.blockKeyboard();
+			console.log('Game over!');
+		}
+	});
+</script>
+<style>
+	.game-container {
+		padding: 2rem;
+		background: #443f3f;
+	}
+</style>
