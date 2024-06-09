@@ -45,6 +45,7 @@
 	import Keyboard from '../components/Keyboard.vue';
 	import WordList from '../assets/words.json';
 	import { ref, watch } from 'vue';
+	import { useRouter } from 'vue-router';
 
 	// Check window width
 	const windowWidth = ref(window.innerWidth);
@@ -361,9 +362,11 @@
 		}
 	};
 
+	const router = useRouter();
 	// Refresh the game
 	const refreshGame = () => {
-		window.location.reload();
+		// redirect to /
+		router.push('/');
 	};
 
 	// If the game is won console log it
