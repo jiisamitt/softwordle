@@ -366,7 +366,7 @@
 	// Refresh the game
 	const refreshGame = () => {
 		// redirect to /
-		router.push('/');
+		window.location.reload();
 	};
 
 	// If the game is won console log it
