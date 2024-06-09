@@ -7,6 +7,14 @@ const routes = [
 		name: 'game',
 		component: Game,
 	},
+	{
+		path: '/',
+		redirect: '/game',
+	},
+	{
+		path: '/:pathMatch(.*)*',
+		redirect: '/game',
+	},
 ];
 
 const router = createRouter({
