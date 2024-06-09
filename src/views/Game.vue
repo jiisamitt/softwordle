@@ -374,7 +374,10 @@
 			console.log('You won!');
 			// Animates the winning message, shows letter by letter
 			const winningMessage = document.querySelector('.winning-message');
-			winningMessage.style.animation = 'fadeIn 1s forwards';
+			// Wait one second
+			setTimeout(() => {
+				winningMessage.style.animation = 'fadeIn 2s forwards';
+			}, 1000);
 		}
 		if (newGameState === 'over') {
 			keyboardRef.value.blockKeyboard();
