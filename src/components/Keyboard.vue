@@ -143,11 +143,12 @@
 	.key:active {
 		transform: translateY(4px);
 		transition: transform 0.2s;
+		background: #444848 !important;
 	}
 	.animate {
 		transform: translateY(4px);
 		transition: transform 0.2s;
-		/* background: #444848 !important; */
+		background: #444848 !important;
 	}
 	.unused-key {
 		background: #4b4d4d;
