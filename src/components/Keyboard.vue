@@ -138,6 +138,7 @@
 	}
 	.key:hover {
 		background: #818686;
+		color: #f2eaea;
 	}
 	.key:active {
 		transform: translateY(4px);
@@ -146,7 +147,7 @@
 	.animate {
 		transform: translateY(4px);
 		transition: transform 0.2s;
-		background: #444848 !important;
+		/* background: #444848 !important; */
 	}
 	.unused-key {
 		background: #4b4d4d;
@@ -167,9 +168,9 @@
 	@media (max-width: 700px) {
 		.key {
 			font-size: 14px;
-			width: 28px;
-			height: 38px;
-			line-height: 38px;
+			width: 32px;
+			height: 32px;
+			line-height: 32px;
 			margin: 2px;
 		}
 		.bigger-key {

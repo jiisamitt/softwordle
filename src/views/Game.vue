@@ -2,6 +2,7 @@
 	<div class="game-container">
 		<h1 class="game-title">Softwordle</h1>
 		<div class="board-container">
+			<div class="winning-message">You won</div>
 			<Board ref="boardRef" :board-state="boardState" />
 			<Keyboard
 				ref="keyboardRef"
@@ -27,11 +28,19 @@
 	>
 		<Help @closeHelp="showHelp = false" />
 	</v-dialog>
+	<v-dialog
+		persistent
+		v-model="showGameOver"
+		:width="windowWidth > 500 ? 500 : windowWidth - 100"
+	>
+		<GameOver :word="randomWord" @refresh="refreshGame" />
+	</v-dialog>
 </template>
 
 <script setup>
 	import Welcome from '../components/Welcome.vue';
 	import Help from '../components/Help.vue';
+	import GameOver from '../components/GameOver.vue';
 	import Board from '../components/Board.vue';
 	import Keyboard from '../components/Keyboard.vue';
 	import WordList from '../assets/words.json';
@@ -212,10 +221,10 @@
 	const errorType = ref('none');
 	const showWelcome = ref(true);
 	const showHelp = ref(false);
+	const showGameOver = ref(false);
 
 	const randomWord =
 		WordList['words'][Math.floor(Math.random() * WordList['words'].length)];
-	console.log(randomWord);
 
 	// Update the board
 	const updateBoard = (key) => {
@@ -352,16 +361,25 @@
 		}
 	};
 
+	// Refresh the game
+	const refreshGame = () => {
+		window.location.reload();
+	};
+
 	// If the game is won console log it
 	watch(gameState, (newGameState) => {
 		if (newGameState === 'won') {
 			boardRef.value.dance(currentBoardRow.value - 1);
 			keyboardRef.value.blockKeyboard();
 			console.log('You won!');
+			// Animates the winning message, shows letter by letter
+			const winningMessage = document.querySelector('.winning-message');
+			winningMessage.style.animation = 'fadeIn 1s forwards';
 		}
 		if (newGameState === 'over') {
 			keyboardRef.value.blockKeyboard();
 			console.log('Game over!');
+			showGameOver.value = true;
 		}
 	});
 </script>
@@ -393,6 +411,11 @@
 		color: #cdd1d6;
 		cursor: pointer;
 	}
+	.winning-message {
+		font-size: 2rem;
+		color: #97c9d8;
+		opacity: 0;
+	}
 	@media (max-width: 700px) {
 		.game-title {
 			font-size: 1.5rem;
@@ -402,6 +425,23 @@
 		}
 		.board-container {
 			padding: 20px 15px;
+		}
+		.help-icon {
+			top: 5px;
+			right: 5px;
+		}
+		.winning-message {
+			font-size: 1rem;
+		}
+	}
+	/* animation for winning message, show letter by letter */
+
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
 		}
 	}
 </style>
