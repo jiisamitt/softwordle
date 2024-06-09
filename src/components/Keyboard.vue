@@ -127,7 +127,7 @@
 		display: inline-block;
 		width: 50px;
 		height: 50px;
-		background: #6f7272;
+		background: #0c1214;
 		color: #f2eaea;
 		text-align: center;
 		line-height: 50px;
@@ -137,30 +137,43 @@
 		font-weight: bolder;
 	}
 	.key:hover {
-		background: #444848;
+		background: #818686;
 	}
 	.key:active {
 		transform: translateY(4px);
-		transition: transform 0.1s;
+		transition: transform 0.2s;
 	}
 	.animate {
 		transform: translateY(4px);
-		transition: transform 0.1s;
+		transition: transform 0.2s;
 		background: #444848 !important;
 	}
 	.unused-key {
-		background: #6f7272;
+		background: #4b4d4d;
 		color: #f2eaea;
 	}
 	.used-key {
-		background: #282b2b;
+		background: #4b4d4d;
 		color: #f2eaea;
 	}
 	.correct-key {
-		background: #63c9c9;
-		color: #f2eaea;
+		background: #97c9d8;
+		color: #101213;
 	}
 	.bigger-key {
 		width: 80px;
+	}
+	/* media for screen less than 600px */
+	@media (max-width: 700px) {
+		.key {
+			font-size: 14px;
+			width: 28px;
+			height: 38px;
+			line-height: 38px;
+			margin: 2px;
+		}
+		.bigger-key {
+			width: 55px !important;
+		}
 	}
 </style>

@@ -1,21 +1,44 @@
 <template>
 	<div class="game-container">
-		<h1>Softwordle</h1>
-		<Board ref="boardRef" :board-state="boardState" />
-		<Keyboard
-			ref="keyboardRef"
-			:keyboard-state="keyboardState"
-			@press-key="updateBoard"
-		/>
+		<h1 class="game-title">Softwordle</h1>
+		<div class="board-container">
+			<Board ref="boardRef" :board-state="boardState" />
+			<Keyboard
+				ref="keyboardRef"
+				:keyboard-state="keyboardState"
+				@press-key="updateBoard"
+			/>
+		</div>
+		<!-- help icon -->
+		<v-icon class="help-icon" @click="showHelp = true" size="30"
+			>mdi-help-circle</v-icon
+		>
 	</div>
-	<v-dialog> aasd </v-dialog>
+	<v-dialog
+		persistent
+		v-model="showWelcome"
+		:width="windowWidth > 500 ? 500 : windowWidth - 100"
+	>
+		<Welcome @closeWelcome="showWelcome = false" />
+	</v-dialog>
+	<v-dialog
+		v-model="showHelp"
+		:width="windowWidth > 500 ? 500 : windowWidth - 100"
+	>
+		<Help @closeHelp="showHelp = false" />
+	</v-dialog>
 </template>
 
 <script setup>
+	import Welcome from '../components/Welcome.vue';
+	import Help from '../components/Help.vue';
 	import Board from '../components/Board.vue';
 	import Keyboard from '../components/Keyboard.vue';
 	import WordList from '../assets/words.json';
 	import { ref, watch } from 'vue';
+
+	// Check window width
+	const windowWidth = ref(window.innerWidth);
 
 	// Define the board and keyboard state
 	const keyboardState = ref({
@@ -187,6 +210,8 @@
 	const gameState = ref('playing');
 	const displayError = ref(false);
 	const errorType = ref('none');
+	const showWelcome = ref(true);
+	const showHelp = ref(false);
 
 	const randomWord =
 		WordList['words'][Math.floor(Math.random() * WordList['words'].length)];
@@ -341,8 +366,42 @@
 	});
 </script>
 <style>
+	.game-title {
+		font-size: 4rem;
+	}
 	.game-container {
 		padding: 2rem;
-		background: #443f3f;
+		background: #0c1214;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		/* center horizontally and vertically */
+		align-items: center;
+		justify-content: center;
+		gap: 3rem;
+	}
+	.board-container {
+		align-self: center;
+		background: #121b1e;
+		border-radius: 15px;
+		padding: 40px 30px;
+	}
+	.help-icon {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		color: #cdd1d6;
+		cursor: pointer;
+	}
+	@media (max-width: 700px) {
+		.game-title {
+			font-size: 1.5rem;
+		}
+		.game-container {
+			gap: 1rem;
+		}
+		.board-container {
+			padding: 20px 15px;
+		}
 	}
 </style>

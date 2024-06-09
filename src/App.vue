@@ -10,8 +10,8 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		text-align: center;
-		color: #cdd1d6;
-		/*background-color: #2c3e50; */
+		color: #ebedee;
+		background: #0c1214;
 	}
 	body {
 		margin: 0;

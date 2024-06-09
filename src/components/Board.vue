@@ -106,29 +106,36 @@
 	.letter {
 		width: 50px;
 		height: 50px;
-		background: #646566;
-		color: antiquewhite;
+		background: #27363b;
+		color: #ebedee;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		margin: 5px;
 		font-size: 1.2rem;
 		font-weight: bolder;
+		border-radius: 5px;
 	}
 	.letter-correct-all {
-		background: #63c9c9;
-		color: #f2eaea;
+		background: #97c9d8;
+		color: #101213;
 	}
 	.letter-correct-almost {
-		background: #d6d6b6;
-		color: #f2eaea;
+		background: #c7b06a;
+		color: #101213;
 	}
 	.letter-incorrect {
 		background: #4b4d4d;
-		color: #f2eaea;
 	}
 	.animate {
 		animation: animate 1s;
+	}
+	@media (max-width: 700px) {
+		.letter {
+			width: 40px;
+			height: 40px;
+			font-size: 1rem;
+		}
 	}
 	/* animation with flip */
 	@keyframes animate {
